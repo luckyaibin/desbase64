@@ -454,6 +454,7 @@ uint32 base64_des_decrypt(char *output_buf,int32 output_buf_len,char* input_buf,
 	ubyte c = 0;
 
 	base64_to_des_dec_block bdb;
+	 bdb.des_b.uint64_part = 0;
 	bdb.filled_index = -1;
 	while (curr_index < last_char_index)
 	{

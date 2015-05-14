@@ -3,12 +3,12 @@
 #include "base64.h"
 #include "desbase64.h"
 #include <iostream>
-
+#include <stdio.h>
 int main()
 {
 	uint64 key =  0x77616E6777616E61;//wangwana
 	uint64 iv = 0x00000000;
-	char * data = "Well, the exact reason for an IV varies a bit between different modes that use IV.!";
+	char * data = "密码学中,";
 	int32 Len = strlen(data);
 	int32 need_buf = get_des_base64_encrypt_need_buff_size(Len);
 
@@ -24,7 +24,65 @@ int main()
 
 	int32 dec_Len = base64_des_decrypt(dec_data_buf,dec_need_buf_len,enc_data_buf,enc_Len,key,iv);
 
- 
+	//打开文件
+	FILE *p_data_file = fopen("data.txt","r");
+	if (!p_data_file)
+	{
+		exit(1);
+	}
+	//读取数据
+	fseek(p_data_file,0,SEEK_END);
+	long longBytes=ftell(p_data_file);// longBytes就是文件的长度
+	char *file_buf = (char*)malloc(longBytes);
+	fseek(p_data_file,0,SEEK_SET);
+	int32 fild_data = fread(file_buf,1,longBytes,p_data_file);
+	fclose(p_data_file);
+	//读取后加密
+	int32 need_size = get_des_base64_encrypt_need_buff_size(longBytes);
+	char *enc_buf = (char*)malloc(need_size);
+	int32 enc_size = des_base64_encrypt(enc_buf,need_size,file_buf,longBytes,key,iv);
+
+	//把加密后的写入另外一个文件
+	FILE *p_encrypted_file = fopen("enc_des_base64.txt","w");
+	if (!p_encrypted_file)
+	{
+		exit(1);
+	}
+	//加密数据写入后关闭文件
+	fwrite(enc_buf,1,enc_size,p_encrypted_file);
+	fflush(p_encrypted_file);
+	fclose(p_encrypted_file);
+
+
+	//再重新打开文件
+	p_encrypted_file = fopen("enc_des_base64.txt","r");
+	if (!p_encrypted_file)
+	{
+		exit(1);
+	}
+	//读取出来
+	fseek(p_encrypted_file,0,SEEK_END);
+	longBytes = ftell(p_encrypted_file);
+
+	char * encryped_data_buf = (char*)malloc(longBytes);
+	fseek(p_encrypted_file,0,SEEK_SET);
+	fread(encryped_data_buf,1,longBytes,p_encrypted_file);
+
+	//解密
+	int32 dec_buf_size = get_base64_des_decrypt_need_buff_size(longBytes);
+	char *decrpyted_data_buf = (char*)malloc(dec_buf_size);
+	int32 data_size = base64_des_decrypt(decrpyted_data_buf,dec_buf_size,encryped_data_buf,longBytes,key,iv);
+
+	FILE *p_decrypted_file = fopen("dec_des_base64.txt","w");
+	if (!p_decrypted_file)
+	{
+		exit(1);
+	}
+	//写入文件
+	fwrite(decrpyted_data_buf,1,data_size,p_decrypted_file);
+	fflush(p_decrypted_file);
+	fclose(p_decrypted_file);
+	
 
 	return 0;
 }
