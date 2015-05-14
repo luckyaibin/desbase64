@@ -6,27 +6,19 @@
 
 // Global variable.
 // Note: To change the charset to a URL encoding, replace the '+' and '/' with '*' and '-'
-ubyte charset[]={"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"};
- 
-int32_t encode64(char * out,char * in,int32_t in_len)
-{
-	//三个字节算一组，有多少个组
-	int32_t group_num = in_len / 3;
-	//剩余多少个字节，值不是1就是2
-	int32_t left_num = in_len % 3;
-	
+extern ubyte charset[66];
 
-	//输出指针为空时，返回编码所需的缓冲大小
-	if (!out)
-	{
-		
-		left_byte = in_len*3 + ( (in_len - n*3)>0 ? 3 : 0 );
-		return n;
-	}
-	
-	output_group o;
-	o.a = in->a.h;
-	o.
-}
+extern uint32 reverse_charset[255];
+
+//获得编码后所需的最小缓冲大小
+int32 get_base64_encode_need_buf_len(int32 in_buf_len);
+
+//base64编码，out缓冲需要足够大,encode64返回编码后的数据长度
+int32 encode64(char * out_buf,int32 out_buf_len,char * in_buf,int32 in_buf_len);
+
+int32 get_base64_decode_need_buf_len(int32 in_buf_len);
+
+//返回解码后的数据长度
+int32 decode64(char * out_buf,int32 out_buf_len,char * in_buf,int32 in_buf_len);
 
 #endif
