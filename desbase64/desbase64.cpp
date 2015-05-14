@@ -28,7 +28,7 @@ uint32 des_encrypt(char *output_buf,int32 output_buf_len,char* input_buf,int32 i
 		block.ubyte_part[6] = c6;
 		block.ubyte_part[7] = c7;
 
-		printf("%lx\n",block.uint64_part);
+		//printf("%lx\n",block.uint64_part);
 		//用初始化向量异或一下
 		block.uint64_part ^= iv;
 
@@ -100,7 +100,7 @@ uint32 des_encrypt(char *output_buf,int32 output_buf_len,char* input_buf,int32 i
 		block.ubyte_part[6] = c6;
 		block.ubyte_part[7] = c7;
 
-		printf("%lx\n",block.uint64_part);
+		//printf("%lx\n",block.uint64_part);
 		//用初始化向量异或一下
 		block.uint64_part ^= iv;
 
@@ -150,7 +150,7 @@ uint32 des_decrypt(char *output_buf,int32 output_buf_len,char* input_buf,int32 i
 		block.ubyte_part[6] = c6;
 		block.ubyte_part[7] = c7;
 
-		printf("%lx\n",block);
+		//printf("%lx\n",block);
 
 
 		block.uint64_part = Des(block.uint64_part,key,'d');
@@ -232,7 +232,7 @@ uint32 des_base64_encrypt(char *output_buf,int32 output_buf_len,char* input_buf,
 		block.ubyte_part[6] = c6;
 		block.ubyte_part[7] = c7;
 
-		printf("%lx\n",block.uint64_part);
+		//printf("%lx\n",block.uint64_part);
 		//用初始化向量异或一下
 		block.uint64_part ^= iv;
 		block.uint64_part = Des(block.uint64_part,key,'e');
@@ -328,7 +328,7 @@ uint32 des_base64_encrypt(char *output_buf,int32 output_buf_len,char* input_buf,
 		block.ubyte_part[6] = c6;
 		block.ubyte_part[7] = c7;
 
-		printf("%lx\n",block.uint64_part);
+		//printf("%lx\n",block.uint64_part);
 		//用初始化向量异或一下
 		block.uint64_part ^= iv;
 
@@ -480,45 +480,59 @@ uint32 base64_des_decrypt(char *output_buf,int32 output_buf_len,char* input_buf,
 		if(bdb.filled_index<7)
 		{
 			bdb.des_b.ubyte_part[++bdb.filled_index] = a;
-		}
-		if (bdb.filled_index==7)//填充满了一个可以des解密的单元
-		{
-			bdb.filled_index = -1;
-			bdb.des_b.uint64_part = Des(bdb.des_b.uint64_part,key,'d');
-			//用初始化向量异或一下
-			bdb.des_b.uint64_part ^= iv;
-			memcpy(output_buf+decrypted_byte,&bdb.des_b.uint64_part,sizeof(uint64));
-			decrypted_byte = decrypted_byte + 8;
+		 
+			if (bdb.filled_index==7)//填充满了一个可以des解密的单元
+			{
+				bdb.filled_index = -1;
+				bdb.des_b.uint64_part = Des(bdb.des_b.uint64_part,key,'d');
+				//用初始化向量异或一下
+				bdb.des_b.uint64_part ^= iv;
+				memcpy(output_buf+decrypted_byte,&bdb.des_b.uint64_part,sizeof(uint64));
+				decrypted_byte = decrypted_byte + 8;
+				if (curr_index ==last_char_index )//最后一部分填充满了base64，可以结束了
+				{
+					break;
+				}
+			}
 		}
 
 
 		if(bdb.filled_index<7)
 		{
 			bdb.des_b.ubyte_part[++bdb.filled_index] = b;
+		
+			if (bdb.filled_index==7)//填充满了一个可以des解密的单元
+			{
+				bdb.filled_index = -1;
+				bdb.des_b.uint64_part = Des(bdb.des_b.uint64_part,key,'d');
+				//用初始化向量异或一下
+				bdb.des_b.uint64_part ^= iv;
+				memcpy(output_buf+decrypted_byte,&bdb.des_b.uint64_part,sizeof(uint64));
+				decrypted_byte = decrypted_byte + 8;
+				if (curr_index ==last_char_index )//最后一部分填充满了base64，可以结束了
+				{
+					break;
+				}
+			}
 		}
-		if (bdb.filled_index==7)//填充满了一个可以des解密的单元
-		{
-			bdb.filled_index = -1;
-			bdb.des_b.uint64_part = Des(bdb.des_b.uint64_part,key,'d');
-			//用初始化向量异或一下
-			bdb.des_b.uint64_part ^= iv;
-			memcpy(output_buf+decrypted_byte,&bdb.des_b.uint64_part,sizeof(uint64));
-			decrypted_byte = decrypted_byte + 8;
-		}
-
 
 		if(bdb.filled_index<7)
 		{
 			bdb.des_b.ubyte_part[++bdb.filled_index] = c;
-		}
-		if (bdb.filled_index==7)//填充满了一个可以des解密的单元
-		{
-			bdb.filled_index = -1;
-			bdb.des_b.uint64_part = Des(bdb.des_b.uint64_part,key,'d');
-			//用初始化向量异或一下
-			bdb.des_b.uint64_part ^= iv;
-			memcpy(output_buf+decrypted_byte,&bdb.des_b.uint64_part,sizeof(uint64));
-			decrypted_byte = decrypted_byte + 8;
+		
+			if (bdb.filled_index==7)//填充满了一个可以des解密的单元
+			{
+				bdb.filled_index = -1;
+				bdb.des_b.uint64_part = Des(bdb.des_b.uint64_part,key,'d');
+				//用初始化向量异或一下
+				bdb.des_b.uint64_part ^= iv;
+				memcpy(output_buf+decrypted_byte,&bdb.des_b.uint64_part,sizeof(uint64));
+				decrypted_byte = decrypted_byte + 8;
+				if (curr_index ==last_char_index )//最后一部分填充满了base64，可以结束了
+				{
+					break;
+				}
+			}
 		}
 	}
 	if (bdb.filled_index != -1)

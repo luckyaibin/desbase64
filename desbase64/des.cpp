@@ -6,7 +6,7 @@
 
 void Dump(uint32 i)
 {
-	std::string bits;
+	/*std::string bits;
 	for (int p=1;p<=32;p++)
 	{
 		char c = GET_BIT32(i,p) + '0';
@@ -18,24 +18,24 @@ void Dump(uint32 i)
 		}
 	}
 	printf("%s\n",bits.c_str());
-	printf("0x%x\n",i);
+	printf("0x%x\n",i);*/
 }
 
 void Dump(uint64 i)
 {
-	std::string bits;
+	/*std::string bits;
 	for (int p=1;p<=64;p++)
 	{
-		char c = GET_BIT64(i,p) + '0';
-		bits += c;
-		int tmp = ( (p-1) % 4) + 1;
-		if (  tmp == 4 )
-		{
-			bits += " ";
-		}
+	char c = GET_BIT64(i,p) + '0';
+	bits += c;
+	int tmp = ( (p-1) % 4) + 1;
+	if (  tmp == 4 )
+	{
+	bits += " ";
+	}
 	}
 	printf("%s\n",bits.c_str());
-	printf("0x%llx\n",i);
+	printf("0x%llx\n",i);*/
 }
 
 //初始置换
@@ -52,14 +52,12 @@ void ApplyIP(uint64& data)
 
 void ApplyFP(uint64& data)
 {
-	//Dump(data);
 	uint64 _data = 0;
 	for (int i=1;i<=64;i++)
 	{
 		SET_BIT64(_data,i,GET_BIT64(data,FP[i-1]));
 	}
 	data = _data;
-	//Dump(data);
 }
 
 uint64 g_subkeys[16] = {0};
@@ -83,9 +81,7 @@ void GenerateSubKeys(uint64 *subkeys,uint64 key)
 		uint32 C1 = 0;
 		uint32 C2 = 0;
 		GET_BIT_RANGE64(C1,key56,9,36);
-		//Dump(C1);
 		GET_BIT_RANGE64(C2,key56,37,64);
-		//Dump(C2);
 		//std::cout<<TO_STR(CYC_LEFT_SHIFT(key56,9,36,LST[i-1]));
 		//std::cout<<"-----------" <<std::endl;
 		//std::cout<<TO_STR(CYC_LEFT_SHIFT(key56,9,36,LST[i-1]));
@@ -97,8 +93,6 @@ void GenerateSubKeys(uint64 *subkeys,uint64 key)
 			int pos_in_bit64 = 8 + CPT[j-17];
 			SET_BIT64(one_sub_key,j,GET_BIT64(key56,pos_in_bit64));   
 		}
-		printf("第%d个子秘钥为:",i);
-		Dump(one_sub_key);
 		*(subkeys + i-1) = one_sub_key;
 	}     
 }
@@ -135,17 +129,14 @@ uint32 S_Box(uint64 xor_data)
 		line = ((s_box_data_1 >>4)&MASK_ONE_BITS) | (s_box_data_1 & 1);
 		column = (s_box_data_1>>1) & MASK_FOUR_BITS;
 		//左移四位，空出4个bit
-		Dump(s_box_result);
 		s_box_result = s_box_result<<4;
 
 		uint32 v = S_Boxes[i][line][column];
 
-		printf("用%x替换后为",v);
+		//printf("用%x替换后为",v);
 		s_box_result |= v;
-		Dump(s_box_result);
 	}   
-	std::cout<<"S-Box替换后为"<<std::endl;
-	Dump(s_box_result);
+	//std::cout<<"S-Box替换后为"<<std::endl;
 	return s_box_result;
 }
 
@@ -160,8 +151,6 @@ uint32 P_Box(uint32 s_box_result)
 		uint32 v = GET_BIT32(s_box_result,idx);
 		SET_BIT32(p_result,i,v);
 	}
-	std::cout<<"P-Box替换后为"<<std::endl;
-	Dump(p_result);
 	return p_result;
 }
 
@@ -193,10 +182,7 @@ uint64 Des(uint64 _data,uint64 _key,char en_or_de)
 		GenerateSubKeys(g_subkeys,key);
 		inited_sub_keys = _key;
 	}
-
-	Dump(data);
 	ApplyIP(data);
-	Dump(data);
 	uint32 L0 = data>>32;
 	uint32 R0 = data;
 
@@ -224,13 +210,7 @@ uint64 Des(uint64 _data,uint64 _key,char en_or_de)
 			L0 = L0 ^p_box_result;
 		}   
 	}
-	Dump(L0);
-	Dump(R0);
-
 	data = (uint64)L0<<32 | R0;
-
 	ApplyFP(data);
-
-	Dump(data);
 	return data;
 }

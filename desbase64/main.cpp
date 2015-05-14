@@ -8,7 +8,7 @@ int main()
 {
 	uint64 key =  0x77616E6777616E61;//wangwana
 	uint64 iv = 0x00000000;
-	char * data = "密码学中,";
+	char * data = "Man";
 	int32 Len = strlen(data);
 	int32 need_buf = get_des_base64_encrypt_need_buff_size(Len);
 
@@ -25,7 +25,7 @@ int main()
 	int32 dec_Len = base64_des_decrypt(dec_data_buf,dec_need_buf_len,enc_data_buf,enc_Len,key,iv);
 
 	//打开文件
-	FILE *p_data_file = fopen("data.txt","r");
+	FILE *p_data_file = fopen("data.txt","rb");
 	if (!p_data_file)
 	{
 		exit(1);
@@ -43,7 +43,7 @@ int main()
 	int32 enc_size = des_base64_encrypt(enc_buf,need_size,file_buf,longBytes,key,iv);
 
 	//把加密后的写入另外一个文件
-	FILE *p_encrypted_file = fopen("enc_des_base64.txt","w");
+	FILE *p_encrypted_file = fopen("enc_des_base64.txt","wb");
 	if (!p_encrypted_file)
 	{
 		exit(1);
@@ -55,7 +55,7 @@ int main()
 
 
 	//再重新打开文件
-	p_encrypted_file = fopen("enc_des_base64.txt","r");
+	p_encrypted_file = fopen("enc_des_base64.txt","rb");
 	if (!p_encrypted_file)
 	{
 		exit(1);
@@ -73,7 +73,7 @@ int main()
 	char *decrpyted_data_buf = (char*)malloc(dec_buf_size);
 	int32 data_size = base64_des_decrypt(decrpyted_data_buf,dec_buf_size,encryped_data_buf,longBytes,key,iv);
 
-	FILE *p_decrypted_file = fopen("dec_des_base64.txt","w");
+	FILE *p_decrypted_file = fopen("dec_des_base64.txt","wb");
 	if (!p_decrypted_file)
 	{
 		exit(1);
