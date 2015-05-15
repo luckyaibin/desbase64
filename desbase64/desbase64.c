@@ -1,4 +1,5 @@
 #include "des.h"
+#include "base64.h"
 #include "desbase64.h"
 
 union des_block
