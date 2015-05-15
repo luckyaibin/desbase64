@@ -27,11 +27,11 @@
 // 把V从B开始到E的bits，向左循环移动N位
 // 1010 0101 1110 0010
 #define CYC_LEFT_SHIFT(V,B,E,N) \
-	do{\
-	for (int _i=0;_i<N;_i++)\
+	do{int _i=0;int _j=0;\
+	for (_i=0;_i<N;_i++)\
 {\
 	int left_most = GET_BIT64(V,B);\
-	for (int _j=(B);_j<(E);_j++)\
+	for (_j=(B);_j<(E);_j++)\
 {\
 	SET_BIT64(V,_j,GET_BIT64(V,_j+1));\
 }\
@@ -43,8 +43,8 @@
 //从V取B ~ E之间的bits,放到R的低位
 #define GET_BIT_RANGE64(R,V,B,E)\
 	do\
-{\
-	for (int _i=B;_i<=E;_i++)\
+{int _i=0;\
+	for (_i=B;_i<=E;_i++)\
 {\
 	SET_BIT64(R,64-(E-_i),GET_BIT64(V,_i));\
 }\
@@ -187,13 +187,11 @@ const static char FP[] =
 };
 
 
-void Dump(uint32 i);
-void Dump(uint64 i);
-void ApplyIP(uint64& data);
-void ApplyFP(uint64& data);
+void ApplyIP(uint64* data);
+void ApplyFP(uint64* data);
 void GenerateSubKeys(uint64 *subkeys,uint64 key);
 uint64 ExpandData(uint32 data);
-uint64 Des(uint64 data,uint64 key,char en_or_de='e');
+uint64 Des(uint64 data,uint64 key,char en_or_de);
 extern uint64 g_subkeys[16];
 
 #define  TO_STR(M) _TO_STR(M)
