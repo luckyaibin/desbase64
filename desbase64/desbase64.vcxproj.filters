@@ -29,16 +29,16 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="desbase64.cpp">
+    <ClCompile Include="base64.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="des.cpp">
+    <ClCompile Include="des.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="desbase64.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="base64.cpp">
+    <ClCompile Include="main.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
