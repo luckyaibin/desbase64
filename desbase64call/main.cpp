@@ -12,9 +12,11 @@ int main(int argc, char *argv[])
 	fn_type_des_base64_encrypt f_des_base64_encrypt;
 	fn_type_base64_des_decrypt f_base64_des_decrypt;
 
-
-	hDll = LoadLibrary(L"..\\Debug\\desbase64.dll");
-
+	#ifdef _DEBUG
+		hDll = LoadLibrary(L".\\lib\\Debug\\desbase64.dll");
+	#elif
+		hDll = LoadLibrary(L".\\lib\\Release\\desbase64.dll");
+	#endif
 	if (hDll != NULL)
 
 	{
